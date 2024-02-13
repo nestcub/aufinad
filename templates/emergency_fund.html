@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Fund Calculator</title>
+    <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename = 'css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+    
+          <h1 class="logo"><a href="{{ url_for('home')}}">AuFinAd</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+    
+          <nav id="navbar" class="navbar">
+            <ul>
+              <li><a class="nav-link scrollto active" href="{{ url_for('home')}}">Home</a></li>
+              <!-- <li><a class="nav-link scrollto" href="#about">About</a></li>
+              <li><a class="nav-link scrollto" href="{{url_for('home')}}">Services</a></li>          
+              <li><a class="nav-link scrollto" href="#team">Team</a></li>           -->
+              <!-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                  <li><a href="#">Drop Down 1</a></li>
+                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                    <ul>
+                      <li><a href="#">Deep Drop Down 1</a></li>
+                      <li><a href="#">Deep Drop Down 2</a></li>
+                      <li><a href="#">Deep Drop Down 3</a></li>
+                      <li><a href="#">Deep Drop Down 4</a></li>
+                      <li><a href="#">Deep Drop Down 5</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Drop Down 2</a></li>
+                  <li><a href="#">Drop Down 3</a></li>
+                  <li><a href="#">Drop Down 4</a></li>
+                </ul>
+              </li> -->
+              <!-- <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+              <li><a class="getstarted scrollto" href="#services">Get Started</a></li> -->
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+          </nav><!-- .navbar -->
+    
+        </div>
+      </header><!-- End Header -->
+    <div class="container">
+        <style>
+            body {
+                background-color: #fff;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(128, 128, 128, 0.2);
+                background-color: #fff;
+            }
+
+            h1 {
+                color: #24a0ed;
+            }
+
+            .form-box {
+                background-color: #f4f4f4;
+                padding: 20px;
+                border: 1px solid #ccc;
+                box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.2);
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            label {
+                margin: 5px 0;
+            }
+
+            input[type="text"] {
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: 5px 0;
+            }
+
+            input[type="submit"] {
+                background-color: #24a0ed;
+                color: #fff;
+                padding: 10px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+            input[type="submit"]:hover {
+                background-color: #0f7fb7;
+            }
+        </style>
+
+        <h1>Welcome to the Emergency Fund Calculator!</h1>
+        <p>An Emergency Fund is a crucial financial safety net, providing you with the peace of mind and the ability to navigate unexpected expenses such as medical bills, job loss, or sudden repairs without risking your financial stability.</p>
+        
+        <div class="form-box">
+            <form method="POST">
+                <label for="monthly_income">Please enter your monthly income in rupees: ₹</label>
+                <input type="text" name="monthly_income"><br>
+
+                <label for="monthly_expenses">Please enter your monthly expenses in rupees: ₹</label>
+                <input type="text" name="monthly_expenses"><br>
+
+                <label for="existing_savings">Do you already have savings or an Emergency Fund? If so, enter the amount in rupees, otherwise, enter ₹0: ₹</label>
+                <input type="text" name="existing_savings"><br>
+
+                <input type="submit" value="Calculate">
+            </form>
+
+            {% if result %}
+            <p>{{ result }}</p>
+            {% endif %}
+
+
+            {% if chart %}
+            <img src="data:image/png;base64,{{ chart }}" alt="Financial Overview">
+            {% endif %}
+            
+        </div>
+    </div>
+</body>
+</html>

@@ -28,7 +28,7 @@ def create_sequences(data, sequence_length):
 # Fetch historical stock prices
 symbol = 'SBIN.NS'
 start_date = '2020-01-01'
-end_date = '2024-01-22'
+end_date = '2024-03-04'
 stock_data = get_stock_data(symbol, start_date, end_date)
 
 # Preprocess the data
@@ -46,7 +46,7 @@ model.add(Dense(1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train the model
-model.fit(X, y, epochs=100, batch_size=32)
+model.fit(X, y, epochs=30, batch_size=32)
 
 # Make predictions
 last_sequence = scaled_data[-sequence_length:]

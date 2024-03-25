@@ -1,0 +1,40 @@
+{% extends 'base_temp_service.html' %}
+{% block content %}
+
+    <div class="container">
+        <h1>Welcome to the Debt Score Calculator!</h1>
+        <p>Managing debt and understanding interest rates are essential for your financial well-being.</p>
+        <p>Debt can be categorized as high, moderate, or low, depending on factors like the amount owed, interest rates, and your ability to make payments.</p>
+
+        <form method="POST">
+            <label for="total_debt">Please enter your total debt amount in rupees: ₹</label>
+            <input type="number" name="total_debt" id="total_debt" required><br>
+
+            <label for="annual_income">Please enter your annual income in rupees: ₹</label>
+            <input type="number" name="annual_income" id="annual_income" required><br>
+
+            <label for="monthly_expenses">Please enter your monthly expenses in rupees: ₹</label>
+            <input type="number" name="monthly_expenses" id="monthly_expenses" required><br>
+
+            <button type="submit">Calculate Debt Score</button>
+        </form>
+
+        {% if debt_score %}
+        <h2>Your debt score is:
+            {% if debt_score == 'High' %}
+            <span class="red-text">High</span>
+            {% elif debt_score == 'Moderate' %}
+            <span class="yellow-text">Moderate</span>
+            {% elif debt_score == 'Low' %}
+            <span class="green-text">Low</span>
+            {% endif %}
+        </h2>
+        <p>Debt Score Categories:</p>
+        <ul>
+            {% for item in advice %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+{% endblock %}

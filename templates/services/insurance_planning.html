@@ -1,0 +1,36 @@
+{% extends 'base_temp_service.html' %}
+{% block content %}
+
+    <div class="container">
+        <h1>Welcome to the Insurance Planning Advisor!</h1>
+        <p>Planning for insurance is crucial to safeguard your financial future and protect your loved ones.</p>
+        
+        <form method="POST">
+            <label for="marital_status">Are you single or married? Enter 'single' or 'married':</label>
+            <input type="text" name="marital_status" id="marital_status" required><br>
+
+            <label for="children">How many children do you have? Enter the number (if married)/(enter '0' if single):</label>
+            <input type="text" name="children" id="children"><br>
+
+            <button type="submit">Get Insurance Advice</button>
+        </form>
+
+        {% if advice %}
+        <h2>Insurance Planning Advice:</h2>
+        <ul>
+            {% for item in advice %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if tips %}
+        <h2>Tips for Finding the Best Insurance:</h2>
+        <ul>
+            {% for item in tips %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+{% endblock %}

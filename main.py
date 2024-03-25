@@ -208,7 +208,7 @@ def generate_response(user_message):
 
 @app.route('/rendercagr')
 def rendercagr():
-    return render_template('cagr.html')
+    return render_template('services/cagr.html')
 
 
 @app.route('/calculate_cagr', methods=['POST'])

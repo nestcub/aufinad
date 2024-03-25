@@ -1,0 +1,37 @@
+{% extends 'base_temp_service.html' %}
+
+
+{% block content %}
+    <div class="container">
+
+        <h1>Welcome to the Emergency Fund Calculator!</h1>
+        <p>An Emergency Fund is a crucial financial safety net, providing you with the peace of mind and the ability to navigate unexpected expenses such as medical bills, job loss, or sudden repairs without risking your financial stability.</p>
+        
+        <div class="form-box">
+            <form method="POST">
+                <label for="monthly_income">Please enter your monthly income in rupees: ₹</label>
+                <input type="text" name="monthly_income"><br>
+
+                <label for="monthly_expenses">Please enter your monthly expenses in rupees: ₹</label>
+                <input type="text" name="monthly_expenses"><br>
+
+                <label for="existing_savings">Do you already have savings or an Emergency Fund? If so, enter the amount in rupees, otherwise, enter ₹0: ₹</label>
+                <input type="text" name="existing_savings"><br>
+
+                <input type="submit" value="Calculate">
+            </form>
+
+            {% if result %}
+            <p>{{ result }}</p>
+            {% endif %}
+
+
+            {% if chart %}
+            <div>
+                {{ chart | safe }}
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+{% endblock %}

@@ -109,10 +109,11 @@ def emergency_fund_calc():
         plt.close()
 
         # Convert the BytesIO object to base64 for embedding in HTML
-        image_base64 = base64.b64encode(image_stream.read()).decode('utf-8')
+        image_base64 = base64.b64encode(image_stream.getvalue()).decode('utf-8')
         
-        return render_template('emergency_fund.html', result=result, chart=image_base64)
-    return render_template('emergency_fund.html')
+        return render_template('services/emergency_fund.html', result=result, chart=image_base64)
+    return render_template('services/emergency_fund.html')
+
 
 
 @app.route('/insurance_planning', methods=['GET', 'POST'])
@@ -137,8 +138,8 @@ def plan_insurance():
         tips.append(" Seek recommendations from trusted sources and read reviews to assess the reputation of insurance companies.")
         tips.append(" Beware of red flags such as exceptionally low premiums, unsolicited calls, and providers with poor customer service.")
         
-        return render_template('insurance_planning.html', advice=advice, tips=tips)
-    return render_template('insurance_planning.html')
+        return render_template('services/insurance_planning.html', advice=advice, tips=tips)
+    return render_template('services/insurance_planning.html')
 
 @app.route('/debt_score', methods=['GET', 'POST'])
 def debt_score():
@@ -174,9 +175,9 @@ def debt_score():
             advice.append("1. Maintain your responsible financial habits and avoid unnecessary debt.")
             advice.append("2. Build an emergency fund to cover unexpected expenses.")
         
-        return render_template('debt_score.html', debt_score=debt_score, advice=advice)
+        return render_template('services/debt_score.html', debt_score=debt_score, advice=advice)
     
-    return render_template('debt_score.html')
+    return render_template('services/debt_score.html')
     
 ########################################################CHATBOT####################################################################
 
@@ -207,7 +208,7 @@ def generate_response(user_message):
 
 @app.route('/rendercagr')
 def rendercagr():
-    return render_template('cagr.html')
+    return render_template('services/cagr.html')
 
 
 @app.route('/calculate_cagr', methods=['POST'])
@@ -220,8 +221,8 @@ def calculate_cagr_route():
         cagr_result = ((final_value / initial_value) ** (1/num_of_years)) - 1
         cagr_result = cagr_result * 100
 
-        return render_template('cagr.html', cagr_result=cagr_result)
-    return render_template('cagr.html')
+        return render_template('services/cagr.html', cagr_result=cagr_result)
+    return render_template('services/cagr.html')
 
 
 

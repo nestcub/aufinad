@@ -1,0 +1,62 @@
+{% extends 'base_temp_service.html' %}
+{% block content %}
+
+    <p class="swipe-indicator">swipe down to calculate</p>
+    <div class="explanation">
+        <h2>Compound Annual Growth Rate (CAGR) Explanation:</h2>
+        <p>CAGR is a measure of the geometric progression ratio providing a constant rate of return over a specified time period. It represents the mean annual growth rate of an investment over a period longer than one year, smoothing out fluctuations for a more accurate measure of annual growth.</p>
+
+        <h2>Input Values:</h2>
+        <ul>
+            <li><strong>Initial Value:</strong> The starting value of the investment or business metric.</li>
+            <li><strong>Final Value:</strong> The ending value of the investment or business metric.</li>
+            <li><strong>Number of Years:</strong> The time period over which the investment or metric has grown from the initial to the final value.</li>
+        </ul>
+
+        <h2>Output Value:</h2>
+        <p><strong>CAGR (%):</strong> The calculated Compound Annual Growth Rate expressed as a percentage. It represents the constant rate of return that, if applied annually, would result in the final value from the initial value over the specified number of years.</p>
+
+        <h2>Example:</h2>
+        <p>Let's say you invested $1,000 in a stock in 2010, and its value grew to $2,500 by 2020. The CAGR calculation is as follows:</p>
+        <p>Initial Value = $1,000</p>
+        <p>Final Value = $2,500</p>
+        <p>Number of Years = 2020 - 2010 = 10 years</p>
+        <p>Applying these values to the CAGR formula:</p>
+        <p>CAGR = ((2,500 / 1,000)^(1/10)) - 1</p>
+        <p>Calculating this gives you the CAGR, which can be converted to a percentage. This example illustrates how much, on average, your investment grew annually over the specified period.</p>
+    </div>
+    <h1>CAGR Calculator</h1>
+    <form method="post" action="/calculate_cagr">
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Initial Value:</td>
+                <td><input type="number" name="initial_value" required></td>
+            </tr>
+            <tr>
+                <td>Final Value:</td>
+                <td><input type="number" name="final_value" required></td>
+            </tr>
+            <tr>
+                <td>Number of Years:</td>
+                <td><input type="number" name="num_of_years" required></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Calculate CAGR</button>
+                </td>
+            </tr>
+            {% if cagr_result is defined %}
+                <tr>
+                    <td colspan="2">
+                        <h2>Result</h2>
+                        <p>The Compound Annual Growth Rate (CAGR) is: {{ cagr_result }}%</p>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </form>
+{% endblock %}

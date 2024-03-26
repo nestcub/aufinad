@@ -9,7 +9,7 @@ import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/')
 @app.route('/home')
@@ -224,7 +224,43 @@ def calculate_cagr_route():
         return render_template('services/cagr.html', cagr_result=cagr_result)
     return render_template('services/cagr.html')
 
+########################################################NEWS####################################################################
+import requests
+from bs4 import BeautifulSoup
+def scrape_moneycontrol():
+    # URL of the webpage
+    url = "https://www.moneycontrol.com/news/business/stocks/"
 
+    # Send a GET request to the URL
+    response = requests.get(url)
+
+    # Parse the HTML content
+    soup = BeautifulSoup(response.content, "html.parser")
+
+    # Find all <p> tags
+    paragraphs = soup.find_all("p")
+
+    # Extracting content from <p> tags
+    content = [p.text.strip() for p in paragraphs]
+
+    # Find all <h2> tags containing <a> tags
+    headings_with_links = soup.find_all("h2")
+
+    # Extracting titles and URLs from <h2> tags
+    headings_links = []
+    for h2 in headings_with_links:
+        link = h2.find("a")
+        if link:
+            title = link.text.strip()
+            url = link.get("href")
+            headings_links.append({"title": title, "url": url})
+
+    return content, headings_links
+
+@app.route("/rendernews")
+def rendernews():
+    content, headings_links = scrape_moneycontrol()
+    return render_template("services/news.html", content=content, headings_links=headings_links)
 
 
 if __name__== "__main__":

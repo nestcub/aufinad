@@ -33,7 +33,7 @@ h6 {
   font-family: "Raleway", sans-serif;
 }
 .explanation {
-  margin-top: 20px;
+  margin-top: 60px;
   padding: 10px;
   border: 1px solid #ccc;
   background-color: #f4f4f4;
@@ -455,13 +455,13 @@ h6 {
 }
 
 #hero .icon-boxes {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 #hero .icon-box {
   width: 200px; /* Set the desired width for the container */
   height: 300px; /* Set the desired height for the container */
-  border: 1px solid #ccc; /* Add a border for visual clarity */
+  border: 3px solid #ccc; /* Add a border for visual clarity */
   padding: 20px; /* Add padding for content spacing */
   margin: 10px; /* Add margin to separate containers */
   /* padding: 50px 30px; */

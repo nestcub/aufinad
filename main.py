@@ -20,7 +20,7 @@ def home():
 
 @app.route('/stock')
 def stockdetails():
-    return render_template('stockdetails.html')
+    return render_template('chatbots/stockdetails.html')
 
 
 @app.route('/predict', methods=['POST'])
@@ -183,7 +183,7 @@ def debt_score():
 
 @app.route('/renderchat')
 def renderchat():
-    return render_template('chatbot.html')
+    return render_template('chatbots/chatbot.html')
 
 @app.route('/chat', methods=['GET','POST'])
 def chat():
@@ -198,7 +198,7 @@ def generate_response(user_message):
     # You can add your chatbot logic here based on user messages
     if "predict stock price" in user_message:
         print("Sure! Please provide the stock symbol, start date, and end date for the prediction.")
-        return render_template('stockdetails2.html')
+        return render_template('chatbots/stockdetails2.html')
     else:
         return "I'm not sure how to respond to that."
     

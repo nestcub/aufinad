@@ -1,6 +1,86 @@
-{% extends 'base_temp_service.html' %}
-{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debt Score Calculator</title>
+    <style>
+        body {
+            background-color: #fff;
+            font-family: Arial, sans-serif;
+        }
 
+        h1 {
+            color: #24a0ed;
+        }
+
+        h2 {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(128, 128, 128, 0.2);
+            background-color: #fff;
+        }
+
+        .green-text {
+            color: green;
+        }
+
+        .yellow-text {
+            color: yellow;
+        }
+
+        .red-text {
+            color: red;
+        }
+    </style>
+     <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename = 'css/style.css') }}" rel="stylesheet">
+
+  
+</head>
+<body>
+  <header id="header" class="fixed-top">
+      <div class="container d-flex align-items-center justify-content-between">
+    
+          <h1 class="logo"><a href="{{ url_for('home')}}">AuFinAd</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+    
+          <nav id="navbar" class="navbar">
+            <ul>
+              <li><a class="nav-link scrollto active" href="{{ url_for('home')}}">Home</a></li>
+              <!-- <li><a class="nav-link scrollto" href="#about">About</a></li>
+              <li><a class="nav-link scrollto" href="{{url_for('home')}}">Services</a></li>          
+              <li><a class="nav-link scrollto" href="#team">Team</a></li>           -->
+              <!-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                  <li><a href="#">Drop Down 1</a></li>
+                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                    <ul>
+                      <li><a href="#">Deep Drop Down 1</a></li>
+                      <li><a href="#">Deep Drop Down 2</a></li>
+                      <li><a href="#">Deep Drop Down 3</a></li>
+                      <li><a href="#">Deep Drop Down 4</a></li>
+                      <li><a href="#">Deep Drop Down 5</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Drop Down 2</a></li>
+                  <li><a href="#">Drop Down 3</a></li>
+                  <li><a href="#">Drop Down 4</a></li>
+                </ul>
+              </li> -->
+              <!-- <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+              <li><a class="getstarted scrollto" href="#services">Get Started</a></li> -->
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+          </nav><!-- .navbar -->
+    
+      </div>
+  </header><!-- End Header -->
     <div class="container">
         <h1>Welcome to the Debt Score Calculator!</h1>
         <p>Managing debt and understanding interest rates are essential for your financial well-being.</p>
@@ -37,4 +117,5 @@
         </ul>
         {% endif %}
     </div>
-{% endblock %}
+</body>
+</html>

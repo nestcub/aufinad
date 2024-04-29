@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify,redirect,url_for
 import bestprediction,requests
 import matplotlib.pyplot as plt
 import matplotlib
@@ -7,10 +7,27 @@ from io import BytesIO
 import base64
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
+from flask_sqlalchemy import SQLAlchemy
+import yfinance as yf
 
 
 app = Flask(__name__, static_url_path='/static')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///past_predictions.db'
+db = SQLAlchemy(app)
 
+class Prediction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stock_symbol = db.Column(db.String(10), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    next_day_price = db.Column(db.Integer, nullable = False)
+    plot_data = db.Column(db.LargeBinary, nullable=False)
+
+    def __repr__(self):
+        return f"Prediction(stock_symbol='{self.stock_symbol}', start_date='{self.start_date}', end_date='{self.end_date}')"
+    
+
+    
 @app.route('/')
 @app.route('/home')
 def home():
@@ -20,7 +37,8 @@ def home():
 
 @app.route('/stock')
 def stockdetails():
-    return render_template('chatbots/stockdetails.html')
+    predictions = Prediction.query.all()
+    return render_template('chatbots/stockdetails.html', predictions = predictions)
 
 
 @app.route('/predict', methods=['POST'])
@@ -41,6 +59,7 @@ def predict():
 
     actual_prices = result['actual_prices']
     predicted_prices = result['predicted_prices']
+    print(actual_prices)
 
     plt.figure(figsize=(10, 6))
     plt.plot(date_range, actual_prices, label='Actual Price', color='red')
@@ -57,11 +76,135 @@ def predict():
     img = BytesIO()
     plt.savefig(img, format='png')
     img.seek(0)
-    plot_data = base64.b64encode(img.getvalue()).decode()
+    lstm_data = base64.b64encode(img.getvalue()).decode()
+    lstm_data_for_database = base64.b64encode(img.getvalue())
     img.close()
 
+    actual_prices = get_stock_prices(stock_symbol, start_date, end_date)['Close']
+
+    # Calculate moving average
+    moving_avg = calculate_moving_average(actual_prices, sequence_length)
+
+    # Calculate weighted moving average
+    weights = [1 / (sequence_length - i) for i in range(sequence_length)]
+    weighted_avg = calculate_weighted_moving_average(actual_prices, sequence_length, weights)
+
+    # Calculate exponential smoothing
+    alpha = 0.3  # Smoothing factor
+    exp_smoothing = calculate_exponential_smoothing(actual_prices, alpha)
+
+    next_trading_day = end_date + timedelta(days=1)
+
+    ma_pp = moving_avg.iloc[-1]  
+    wma_pp = weighted_avg.iloc[-1]  
+    es_pp = exp_smoothing.iloc[-1]  
+
+    # Create a date range from start_date to end_date
+    date_range = [start_date + timedelta(days=i) for i in range(len(actual_prices))]
+    date_range = [date.strftime("%Y-%m-%d") for date in date_range]
+
+    # Create separate plots
+    plot_data = []
+
+    # Actual vs. Moving Average plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(date_range, actual_prices, label='Actual Price', color='red')
+    ax.plot(date_range, moving_avg, label='Moving Average', color='green')
+    ax.set_xlabel('Dates')
+    ax.set_ylabel('Price')
+    ax.set_title('Actual vs. Moving Average')
+    ax.legend()
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_data.append(base64.b64encode(img.getvalue()).decode())
+    img.close()
+    plt.close()
+
+    # Actual vs. Weighted Moving Average plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(date_range, actual_prices, label='Actual Price', color='red')
+    ax.plot(date_range, weighted_avg, label='Weighted Moving Average', color='purple')
+    ax.set_xlabel('Dates')
+    ax.set_ylabel('Price')
+    ax.set_title('Actual vs. Weighted Moving Average')
+    ax.legend()
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_data.append(base64.b64encode(img.getvalue()).decode())
+    img.close()
+    plt.close()
+
+    # Actual vs. Exponential Smoothing plot
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(date_range, actual_prices, label='Actual Price', color='red')
+    ax.plot(date_range, exp_smoothing, label='Exponential Smoothing', color='orange')
+    ax.set_xlabel('Dates')
+    ax.set_ylabel('Price')
+    ax.set_title('Actual vs. Exponential Smoothing')
+    ax.legend()
+    img = BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_data.append(base64.b64encode(img.getvalue()).decode())
+    img.close()
+    plt.close()
+
+    try:
+        # Save the prediction data to the database
+        prediction = Prediction(
+            stock_symbol=stock_symbol,
+            start_date=start_date,
+            end_date=end_date,
+            next_day_price = result['next_day_price'],
+            plot_data=lstm_data_for_database  # Convert plot_data to bytes
+        )
+        db.session.add(prediction)
+        db.session.commit()
+        db.session.close()  # Close the database session
+    except Exception as e:
+        db.session.rollback()  # Rollback changes if an error occurs
+        return f"An error occurred while saving prediction data: {str(e)}", 500
+
+
     # Pass the plot image data to the HTML template
-    return render_template('result.html', result=result, plot_data=plot_data)
+    return render_template('chatbots/result.html', plot_data=plot_data,result=result, lstm_data=lstm_data,ma_pp = ma_pp,wma_pp = wma_pp, es_pp = es_pp)
+
+def get_stock_prices(stock_symbol, start_date, end_date):
+    stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
+    return stock_data
+
+# Helper functions for calculating moving average, weighted moving average, and exponential smoothing
+def calculate_moving_average(data, window_size):
+    moving_avg = data.rolling(window=window_size).mean()
+    return moving_avg
+
+def calculate_weighted_moving_average(data, window_size, weights):
+    def weighted_mean(values, weights):
+        return sum(values * weights) / sum(weights)
+
+    weighted_avg = data.rolling(window=window_size).apply(weighted_mean, args=(weights,), raw=True)
+    return weighted_avg
+
+def calculate_exponential_smoothing(data, alpha):
+    exp_smoothing = data.ewm(alpha=alpha, adjust=False).mean()
+    return exp_smoothing
+######################################### ROUTE FOR RECORD  DELETION FROM DATABASE################################################
+@app.route('/delete/<int:prediction_id>', methods=['POST'])
+def delete_prediction(prediction_id):
+    prediction = Prediction.query.get(prediction_id)
+    if prediction:
+        try:
+            db.session.delete(prediction)
+            db.session.commit()
+            db.session.close()
+            return redirect(url_for('stockdetails'))
+        except Exception as e:
+            db.session.rollback()
+            return f"An error occurred while deleting prediction data: {str(e)}", 500
+    else:
+        return f"Prediction with ID {prediction_id} not found", 404
 
 ######################################### ROUTES FOR INFORMATION BUCKETS################################################
 
@@ -261,6 +404,10 @@ def scrape_moneycontrol():
 def rendernews():
     content, headings_links = scrape_moneycontrol()
     return render_template("services/news.html", content=content, headings_links=headings_links)
+
+
+with app.app_context():
+    db.create_all()
 
 
 if __name__== "__main__":

@@ -78,12 +78,26 @@
         </div>
       </header><!-- End Header -->
     <div class="container">
+        <p><strong>Predicted Price for {{ result['stock_symbol'] }} on the Next Trading Day using moving average :</strong> ₹{{ ma_pp }}</p>
+        <h2>Actual vs. Moving Average</h2>
+        <img src="data:image/png;base64,{{ plot_data[0] }}" alt="Actual vs. Moving Average">
+
+        <!-- Actual vs. Weighted Moving Average Plot -->
+        <p><strong>Predicted Price for {{ result['stock_symbol'] }} on the Next Trading Day using weighted moving average :</strong> ₹{{ wma_pp }}</p>
+        <h2>Actual vs. Weighted Moving Average</h2>
+        <img src="data:image/png;base64,{{ plot_data[1] }}" alt="Actual vs. Weighted Moving Average">
+
+        <!-- Actual vs. Exponential Smoothing Plot -->
+        <p><strong>Predicted Price for {{ result['stock_symbol'] }} on the Next Trading Day using Exponential smoothing :</strong> ₹{{ es_pp }}</p>
+        <h2>Actual vs. Exponential Smoothing</h2>
+        <img src="data:image/png;base64,{{ plot_data[2] }}" alt="Actual vs. Exponential Smoothing">
+
         <h1>Stock Price Prediction Results</h1>
         <p><strong>Mean Squared Error on Test Data:</strong> {{ result['mse'] }}</p>
         <p><strong>Predicted Price for {{ result['stock_symbol'] }} on the Next Trading Day:</strong> ₹{{ result['next_day_price'] }}</p>
 
         <h2>Actual vs. Predicted Stock Prices</h2>
-        <img src="data:image/png;base64,{{ plot_data }}" alt="Actual vs. Predicted Prices">
+        <img src="data:image/png;base64,{{ lstm_data }}" alt="Actual vs. Predicted Prices">
     </div>
 </body>
 </html>

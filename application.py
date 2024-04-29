@@ -11,9 +11,9 @@ from flask_sqlalchemy import SQLAlchemy
 import yfinance as yf
 
 
-app = Flask(__name__, static_url_path='/static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///past_predictions.db'
-db = SQLAlchemy(app)
+application = Flask(__name__, static_url_path='/static')
+application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///past_predictions.db'
+db = SQLAlchemy(application)
 
 class Prediction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -28,20 +28,20 @@ class Prediction(db.Model):
     
 
     
-@app.route('/')
-@app.route('/home')
+@application.route('/')
+@application.route('/home')
 def home():
     return render_template('index.html')
 
 ############################################## STOCK PREDICTOR ###########################################################v
 
-@app.route('/stock')
+@application.route('/stock')
 def stockdetails():
     predictions = Prediction.query.all()
     return render_template('chatbots/stockdetails.html', predictions = predictions)
 
 
-@app.route('/predict', methods=['POST'])
+@application.route('/predict', methods=['POST'])
 def predict():
     stock_symbol = request.form.get('stock_symbol')
     start_date = request.form.get('start_date')
@@ -191,7 +191,7 @@ def calculate_exponential_smoothing(data, alpha):
     exp_smoothing = data.ewm(alpha=alpha, adjust=False).mean()
     return exp_smoothing
 ######################################### ROUTE FOR RECORD  DELETION FROM DATABASE################################################
-@app.route('/delete/<int:prediction_id>', methods=['POST'])
+@application.route('/delete/<int:prediction_id>', methods=['POST'])
 def delete_prediction(prediction_id):
     prediction = Prediction.query.get(prediction_id)
     if prediction:
@@ -208,7 +208,7 @@ def delete_prediction(prediction_id):
 
 ######################################### ROUTES FOR INFORMATION BUCKETS################################################
 
-@app.route('/emergency_fund', methods=['GET', 'POST'])
+@application.route('/emergency_fund', methods=['GET', 'POST'])
 def emergency_fund_calc():
     if request.method == 'POST':
         monthly_income = float(request.form['monthly_income'])
@@ -259,7 +259,7 @@ def emergency_fund_calc():
 
 
 
-@app.route('/insurance_planning', methods=['GET', 'POST'])
+@application.route('/insurance_planning', methods=['GET', 'POST'])
 def plan_insurance():
     if request.method == 'POST':
         marital_status = request.form['marital_status'].strip().lower()
@@ -284,7 +284,7 @@ def plan_insurance():
         return render_template('services/insurance_planning.html', advice=advice, tips=tips)
     return render_template('services/insurance_planning.html')
 
-@app.route('/debt_score', methods=['GET', 'POST'])
+@application.route('/debt_score', methods=['GET', 'POST'])
 def debt_score():
     if request.method == 'POST':
         total_debt = float(request.form['total_debt'])
@@ -324,11 +324,11 @@ def debt_score():
     
 ########################################################CHATBOT####################################################################
 
-@app.route('/renderchat')
+@application.route('/renderchat')
 def renderchat():
     return render_template('chatbots/chatbot.html')
 
-@app.route('/chat', methods=['GET','POST'])
+@application.route('/chat', methods=['GET','POST'])
 def chat():
     user_message = request.form.get('user_message')
     if user_message:
@@ -349,12 +349,12 @@ def generate_response(user_message):
 
 ########################################################financial calculators####################################################################
 
-@app.route('/rendercagr')
+@application.route('/rendercagr')
 def rendercagr():
     return render_template('services/cagr.html')
 
 
-@app.route('/calculate_cagr', methods=['POST'])
+@application.route('/calculate_cagr', methods=['POST'])
 def calculate_cagr_route():
     if request.method == 'POST':
         initial_value = float(request.form['initial_value'])
@@ -400,15 +400,15 @@ def scrape_moneycontrol():
 
     return content, headings_links
 
-@app.route("/rendernews")
+@application.route("/rendernews")
 def rendernews():
     content, headings_links = scrape_moneycontrol()
     return render_template("services/news.html", content=content, headings_links=headings_links)
 
 
-with app.app_context():
+with application.app_context():
     db.create_all()
 
 
 if __name__== "__main__":
-    app.run(debug=True)
+    application.run(debug=True)

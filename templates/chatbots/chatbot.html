@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            max-width: 400px;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .user-message {
+            text-align: right;
+            color: #007bff;
+        }
+        .bot-message {
+            text-align: left;
+            color: #333;
+        }
+    </style>
+    <link href="{{ url_for('static', filename = 'css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+    
+          <h1 class="logo"><a href="{{ url_for('home')}}">AuFinAd</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+    
+          <nav id="navbar" class="navbar">
+            <ul>
+              <li><a class="nav-link scrollto active" href="{{ url_for('home')}}">Home</a></li>
+              <!-- <li><a class="nav-link scrollto" href="#about">About</a></li>
+              <li><a class="nav-link scrollto" href="{{url_for('home')}}">Services</a></li>          
+              <li><a class="nav-link scrollto" href="#team">Team</a></li>           -->
+              <!-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                  <li><a href="#">Drop Down 1</a></li>
+                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                    <ul>
+                      <li><a href="#">Deep Drop Down 1</a></li>
+                      <li><a href="#">Deep Drop Down 2</a></li>
+                      <li><a href="#">Deep Drop Down 3</a></li>
+                      <li><a href="#">Deep Drop Down 4</a></li>
+                      <li><a href="#">Deep Drop Down 5</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Drop Down 2</a></li>
+                  <li><a href="#">Drop Down 3</a></li>
+                  <li><a href="#">Drop Down 4</a></li>
+                </ul>
+              </li> -->
+              <!-- <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+              <li><a class="getstarted scrollto" href="#services">Get Started</a></li> -->
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+          </nav><!-- .navbar -->
+    
+        </div>
+      </header><!-- End Header -->
+    <div class="chat-container">
+        <div class="bot-message">
+            <p>Welcome to the Chatbot. How can I assist you today?</p>
+        </div>
+    </div>
+    
+    <form id="chat-form">
+        <div class="chat-container">
+            <div class="user-message">
+                <p>User:</p>
+                <input type="text" id="user-input" name="user_message" placeholder="Type your message here" />
+                <button type="submit">Send</button>
+            </div>
+        </div>
+    </form>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const chatForm = document.getElementById("chat-form");
+            chatForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+                const userInput = document.getElementById("user-input").value;
+                addUserMessage(userInput);
+                sendUserMessage(userInput);
+                document.getElementById("user-input").value = "";
+            });
+        });
+
+        function addUserMessage(message) {
+            const chatContainer = document.querySelector(".chat-container");
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("user-message");
+            userMessage.innerHTML = `<p>User: ${message}</p>`;
+            chatContainer.appendChild(userMessage);
+        }
+
+        function addBotMessage(message) {
+            const chatContainer = document.querySelector(".chat-container");
+            const botMessage = document.createElement("div");
+            botMessage.classList.add("bot-message");
+            botMessage.innerHTML = `<p>Bot: ${message}</p>`;
+            chatContainer.appendChild(botMessage);
+        }
+
+        function sendUserMessage(message) {
+            // Make a request to your Flask chat endpoint and display the bot's response
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `user_message=${encodeURIComponent(message)}`,
+            })
+            .then(response => response.json())
+            .then(data => addBotMessage(data.bot_response))
+            .catch(error => console.error(error));
+        }
+    </script>
+</body>
+</html>

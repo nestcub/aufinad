@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Price Prediction</title>
+     <!-- Template Main CSS File -->
+  <link href="{{ url_for('static', filename = 'css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    
+    <div class="container">
+        <style>
+            body {
+                background-color: #fff;
+                font-family: Arial, sans-serif;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                box-shadow: 0 0 10px rgba(128, 128, 128, 0.2);
+                background-color: #fff;
+            }
+
+            h1 {
+                color: #24a0ed;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            label {
+                margin: 5px 0;
+            }
+
+            select,
+            input[type="date"] {
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: 5px 0;
+            }
+
+            button[type="submit"] {
+                background-color: #24a0ed;
+                color: #fff;
+                padding: 10px;
+                border: none;
+                border-radius: 3px;
+                cursor: pointer;
+            }
+
+            button[type="submit"]:hover {
+                background-color: #0f7fb7;
+            }
+        </style>
+
+        <h1>Stock Price Prediction</h1>
+        <form method="POST" action="/predict">
+            <label for="stock_symbol">Select a stock to predict:</label>
+            <select name="stock_symbol" id="stock_symbol">
+                <option value="ASIANPAINT.NS">Asian Paints Ltd (ASIANPAINT.NS)</option>
+                <option value="EICHERMOT.NS">Eicher Motors Ltd (EICHERMOT.NS)</option>
+                <option value="NESTLEIND.NS">Nestle India Ltd (NESTLEIND.NS)</option>
+                <option value="GRASIM.NS">Grasim Industries Ltd (GRASIM.NS)</option>
+                <option value="HEROMOTOCO.NS">Hero MotoCorp Ltd (HEROMOTOCO.NS)</option>
+                <option value="HINDALCO.NS">Hindalco Industries Ltd (HINDALCO.NS)</option>
+                <option value="HINDUNILVR.NS">Hindustan Unilever Ltd (HINDUNILVR.NS)</option>
+                <option value="ITC.NS">ITC Ltd (ITC.NS)</option>
+                <option value="LT.NS">Larsen & Toubro Ltd (LT.NS)</option>
+                <option value="M&M.NS">Mahindra & Mahindra Ltd (M&M.NS)</option>
+                <option value="RELIANCE.NS">Reliance Industries Ltd (RELIANCE.NS)</option>
+                <option value="TATAMOTORS.NS">Tata Motors Ltd (TATAMOTORS.NS)</option>
+                <option value="TATASTEEL.NS">Tata Steel Ltd (TATASTEEL.NS)</option>
+                <option value="WIPRO.NS">Wipro Ltd (WIPRO.NS)</option>
+                <option value="DRREDDY.NS">Dr. Reddy's Laboratories Ltd (DRREDDY.NS)</option>
+                <option value="TITAN.NS">Titan Company Ltd (TITAN.NS)</option>
+                <option value="SBIN.NS">State Bank of India (SBIN.NS)</option>
+                <option value="KOTAKBANK.NS">Kotak Mahindra Bank Ltd (KOTAKBANK.NS)</option>
+                <option value="UPL.NS">UPL Ltd (UPL.NS)</option>
+                <option value="INFY.NS">Infosys Ltd (INFY.NS)</option>
+                <option value="BAJFINANCE.NS">Bajaj Finance Ltd (BAJFINANCE.NS)</option>
+                <option value="SUNPHARMA.NS">Sun Pharmaceutical Industries Ltd (SUNPHARMA.NS)</option>
+                <option value="JSWSTEEL.NS">JSW Steel Ltd (JSWSTEEL.NS)</option>
+                <option value="HDFCBANK.NS">HDFC Bank Ltd (HDFCBANK.NS)</option>
+                <option value="TCS.NS">Tata Consultancy Services Ltd (TCS.NS)</option>
+                <option value="ICICIBANK.NS">ICICI Bank Ltd (ICICIBANK.NS)</option>
+                <option value="POWERGRID.NS">Power Grid Corporation of India Ltd (POWERGRID.NS)</option>
+                <option value="MARUTI.NS">Maruti Suzuki India Ltd (MARUTI.NS)</option>
+                <option value="INDUSINDBK.NS">IndusInd Bank Ltd (INDUSINDBK.NS)</option>
+                <option value="AXISBANK.NS">Axis Bank Ltd (AXISBANK.NS)</option>
+                <option value="HCLTECH.NS">HCL Technologies Ltd (HCLTECH.NS)</option>
+                <option value="ONGC.NS">Oil & Natural Gas Corporation Ltd (ONGC.NS)</option>
+                <option value="NTPC.NS">NTPC Ltd (NTPC.NS)</option>
+                <option value="BHARTIARTL.NS">Bharti Airtel Ltd (BHARTIARTL.NS)</option>
+                <option value="TECHM.NS">Tech Mahindra Ltd (TECHM.NS)</option>
+                <option value="ZEEL.NS">Zee Entertainment Enterprises Ltd (ZEEL.NS)</option>
+                <option value="ADANIPORTS.NS">Adani Ports & Special Economic Zone Ltd (ADANIPORTS.NS)</option>
+                <option value="ULTRACEMCO.NS">UltraTech Cement Ltd (ULTRACEMCO.NS)</option>
+                <option value="BAJAJ-AUTO.NS">Bajaj Auto Ltd (BAJAJ-AUTO.NS)</option>
+                <option value="SBILIFE.NS">SBI Life Insurance Company Ltd (SBILIFE.NS)</option>
+                <option value="HDFCLIFE.NS">HDFC Life Insurance Company Ltd (HDFCLIFE.NS)</option>
+                <option value="BSE.NS">BSE Ltd (BSE.NS)</option>
+                <option value="GAIL.NS">GAIL (India) Ltd (GAIL.NS)</option>
+                <option value="BRITANNIA.NS">Britannia Industries Ltd (BRITANNIA.NS)</option>
+                <option value="DIVISLAB.NS">Divis Laboratories Ltd (DIVISLAB.NS)</option>
+                <option value="APOLLOHOSP.NS">Apollo Hospitals Enterprise Ltd (APOLLOHOSP.NS)</option>
+
+            </select><br>
+
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" id="start_date" required><br>
+
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" id="end_date" required><br>
+
+            <button type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAGR Calculator</title>
+    <style>
+        body {
+            background-color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(128, 128, 128, 0.2);
+            background-color: #fff;
+        }
+
+        h1 {
+            color: #24a0ed;
+        }
+
+        .form-box {
+            background-color: #f4f4f4;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 2px 5px rgba(128, 128, 128, 0.2);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 5px 0;
+        }
+
+        input[type="number"] {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin: 5px 0;
+        }
+
+        input[type="submit"] {
+            background-color: #24a0ed;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0f7fb7;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+        }
+        .swipe-indicator {
+            text-align: center;
+            margin-top: 2vh; /* Adjust as needed to position the indicator */
+        }
+    </style>
+</head>
+<body>
+    <header id="header" class="fixed-top">
+        <div class="container d-flex align-items-center justify-content-between">
+    
+          <h1 class="logo"><a href="{{ url_for('home')}}">AuFinAd</a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+    
+          <nav id="navbar" class="navbar">
+            <ul>
+              <li><a class="nav-link scrollto active" href="{{ url_for('home')}}">Home</a></li>
+              <!-- <li><a class="nav-link scrollto" href="#about">About</a></li>
+              <li><a class="nav-link scrollto" href="{{url_for('home')}}">Services</a></li>          
+              <li><a class="nav-link scrollto" href="#team">Team</a></li>           -->
+              <!-- <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
+                <ul>
+                  <li><a href="#">Drop Down 1</a></li>
+                  <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-right"></i></a>
+                    <ul>
+                      <li><a href="#">Deep Drop Down 1</a></li>
+                      <li><a href="#">Deep Drop Down 2</a></li>
+                      <li><a href="#">Deep Drop Down 3</a></li>
+                      <li><a href="#">Deep Drop Down 4</a></li>
+                      <li><a href="#">Deep Drop Down 5</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#">Drop Down 2</a></li>
+                  <li><a href="#">Drop Down 3</a></li>
+                  <li><a href="#">Drop Down 4</a></li>
+                </ul>
+              </li> -->
+              <!-- <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+              <li><a class="getstarted scrollto" href="#services">Get Started</a></li> -->
+            </ul>
+            <i class="bi bi-list mobile-nav-toggle"></i>
+          </nav><!-- .navbar -->
+    
+        </div>
+      </header><!-- End Header -->
+    <p class="swipe-indicator">swipe down to calculate</p>
+    <div class="explanation">
+        <h2>Compound Annual Growth Rate (CAGR) Explanation:</h2>
+        <p>CAGR is a measure of the geometric progression ratio providing a constant rate of return over a specified time period. It represents the mean annual growth rate of an investment over a period longer than one year, smoothing out fluctuations for a more accurate measure of annual growth.</p>
+
+        <h2>Input Values:</h2>
+        <ul>
+            <li><strong>Initial Value:</strong> The starting value of the investment or business metric.</li>
+            <li><strong>Final Value:</strong> The ending value of the investment or business metric.</li>
+            <li><strong>Number of Years:</strong> The time period over which the investment or metric has grown from the initial to the final value.</li>
+        </ul>
+
+        <h2>Output Value:</h2>
+        <p><strong>CAGR (%):</strong> The calculated Compound Annual Growth Rate expressed as a percentage. It represents the constant rate of return that, if applied annually, would result in the final value from the initial value over the specified number of years.</p>
+
+        <h2>Example:</h2>
+        <p>Let's say you invested $1,000 in a stock in 2010, and its value grew to $2,500 by 2020. The CAGR calculation is as follows:</p>
+        <p>Initial Value = $1,000</p>
+        <p>Final Value = $2,500</p>
+        <p>Number of Years = 2020 - 2010 = 10 years</p>
+        <p>Applying these values to the CAGR formula:</p>
+        <p>CAGR = ((2,500 / 1,000)^(1/10)) - 1</p>
+        <p>Calculating this gives you the CAGR, which can be converted to a percentage. This example illustrates how much, on average, your investment grew annually over the specified period.</p>
+    </div>
+    <h1>CAGR Calculator</h1>
+    <form method="post" action="/calculate_cagr">
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Initial Value:</td>
+                <td><input type="number" name="initial_value" required></td>
+            </tr>
+            <tr>
+                <td>Final Value:</td>
+                <td><input type="number" name="final_value" required></td>
+            </tr>
+            <tr>
+                <td>Number of Years:</td>
+                <td><input type="number" name="num_of_years" required></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">Calculate CAGR</button>
+                </td>
+            </tr>
+            {% if cagr_result is defined %}
+                <tr>
+                    <td colspan="2">
+                        <h2>Result</h2>                
+                        <strong><p>The Compound Annual Growth Rate (CAGR) is: {{ cagr_result }}%</p></strong>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+    </form>
+    
+</body>
+
+</html>

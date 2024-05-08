@@ -48,29 +48,12 @@ nifty_fifty_stocks = [
 @application.route('/home')
 def home():
     return render_template('index.html',nifty_fifty_stocks = nifty_fifty_stocks)
-
-# @application.route('/')
-# @application.route('/home')
-# def home():
-#     # Get real-time stock prices
-#     stock_prices = real_time_stock_prices(nifty_fifty_stocks)
-#     return render_template('index.html', stock_prices = stock_prices)
-
-# def real_time_stock_prices(stock_symbols):
-#     stock_prices = {}
-#     for symbol in stock_symbols:
-#         stock = yf.Ticker(symbol)
-#         data = stock.history(period='1d')
-#         if not data.empty:
-#             latest_price = data['Close'].iloc[-1]
-#             stock_prices[symbol] = round(latest_price, 2)
-#     return stock_prices    
 ############################################## STOCK PREDICTOR ###########################################################v
 
 @application.route('/stock')
 def stockdetails():
     predictions = Prediction.query.all()
-    return render_template('chatbots/stockdetails.html', predictions = predictions)
+    return render_template('services/stockdetails.html', predictions = predictions)
 
 
 @application.route('/predict', methods=['POST'])
@@ -201,7 +184,7 @@ def predict():
 
 
     # Pass the plot image data to the HTML template
-    return render_template('chatbots/result.html', plot_data=plot_data,result=result, lstm_data=lstm_data,ma_pp = ma_pp,wma_pp = wma_pp, es_pp = es_pp)
+    return render_template('services/result.html', plot_data=plot_data,result=result, lstm_data=lstm_data,ma_pp = ma_pp,wma_pp = wma_pp, es_pp = es_pp)
 
 def get_stock_prices(stock_symbol, start_date, end_date):
     stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
@@ -264,8 +247,8 @@ def emergency_fund_calc():
                     additional_earnings_required = monthly_savings_required
                     result += f" To reach this goal, you need to earn an additional ₹{additional_earnings_required:.2f} per month (or reduce expenses)."
 
-        return render_template('services/emergency_fund.html', result=result)
-    return render_template('services/emergency_fund.html')
+        return render_template('buckets/emergency_fund.html', result=result)
+    return render_template('buckets/emergency_fund.html')
 
 
 
@@ -291,8 +274,8 @@ def plan_insurance():
         tips.append(" Seek recommendations from trusted sources and read reviews to assess the reputation of insurance companies.")
         tips.append(" Beware of red flags such as exceptionally low premiums, unsolicited calls, and providers with poor customer service.")
         
-        return render_template('services/insurance_planning.html', advice=advice, tips=tips)
-    return render_template('services/insurance_planning.html')
+        return render_template('buckets/insurance_planning.html', advice=advice, tips=tips)
+    return render_template('buckets/insurance_planning.html')
 
 @application.route('/debt_score', methods=['GET', 'POST'])
 def debt_score():
@@ -328,32 +311,15 @@ def debt_score():
             advice.append("1. Maintain your responsible financial habits and avoid unnecessary debt.")
             advice.append("2. Build an emergency fund to cover unexpected expenses.")
         
-        return render_template('services/debt_score.html', debt_score=debt_score, advice=advice)
+        return render_template('buckets/debt_score.html', debt_score=debt_score, advice=advice)
     
-    return render_template('services/debt_score.html')
+    return render_template('buckets/debt_score.html')
     
 ########################################################CHATBOT####################################################################
 
 @application.route('/renderchat')
 def renderchat():
-    return render_template('chatbots/chatbot.html')
-
-# @application.route('/chat', methods=['GET','POST'])
-# def chat():
-#     user_message = request.form.get('user_message')
-#     if user_message:
-#         response = generate_response(user_message)
-#         return jsonify({"bot_response": response})
-#     else:
-#         return jsonify({"error": "Invalid request"})
-
-# def generate_response(user_message):
-#     # You can add your chatbot logic here based on user messages
-#     if "predict stock price" in user_message:
-#         print("Sure! Please provide the stock symbol, start date, and end date for the prediction.")
-#         return render_template('chatbots/stockdetails2.html')
-#     else:
-#         return "I'm not sure how to respond to that."    
+    return render_template('services/chatbot.html')
 
 import textwrap
 import google.generativeai as genai

@@ -9,11 +9,14 @@ import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from flask_sqlalchemy import SQLAlchemy
 import yfinance as yf
-
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 application = Flask(__name__, static_url_path='/static')
 application.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///past_predictions.db'
 db = SQLAlchemy(application)
+application.secret_key = os.environ.get('SECRET_KEY')
 
 class Prediction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,12 +30,41 @@ class Prediction(db.Model):
         return f"Prediction(stock_symbol='{self.stock_symbol}', start_date='{self.start_date}', end_date='{self.end_date}')"
     
 
-    
+# List of Nifty Fifty stocks
+nifty_fifty_stocks = [
+    "ASIANPAINT.NS", "EICHERMOT.NS", "NESTLEIND.NS", "GRASIM.NS", "HEROMOTOCO.NS",
+    "HINDALCO.NS", "HINDUNILVR.NS", "ITC.NS", "LT.NS", "M&M.NS",
+    "RELIANCE.NS", "TATAMOTORS.NS", "TATASTEEL.NS", "WIPRO.NS", "DRREDDY.NS",
+    "TITAN.NS", "SBIN.NS", "KOTAKBANK.NS", "UPL.NS", "INFY.NS",
+    "BAJFINANCE.NS", "SUNPHARMA.NS", "JSWSTEEL.NS", "HDFCBANK.NS", "TCS.NS",
+    "ICICIBANK.NS", "POWERGRID.NS", "MARUTI.NS", "INDUSINDBK.NS", "AXISBANK.NS",
+    "HCLTECH.NS", "ONGC.NS", "NTPC.NS", "BHARTIARTL.NS", "TECHM.NS",
+    "ZEEL.NS", "ADANIPORTS.NS", "ULTRACEMCO.NS", "BAJAJ-AUTO.NS", "SBILIFE.NS",
+    "HDFCLIFE.NS", "BSE.NS", "GAIL.NS", "BRITANNIA.NS", "DIVISLAB.NS",
+    "APOLLOHOSP.NS"
+]
+
 @application.route('/')
 @application.route('/home')
 def home():
-    return render_template('index.html')
+    return render_template('index.html',nifty_fifty_stocks = nifty_fifty_stocks)
 
+# @application.route('/')
+# @application.route('/home')
+# def home():
+#     # Get real-time stock prices
+#     stock_prices = real_time_stock_prices(nifty_fifty_stocks)
+#     return render_template('index.html', stock_prices = stock_prices)
+
+# def real_time_stock_prices(stock_symbols):
+#     stock_prices = {}
+#     for symbol in stock_symbols:
+#         stock = yf.Ticker(symbol)
+#         data = stock.history(period='1d')
+#         if not data.empty:
+#             latest_price = data['Close'].iloc[-1]
+#             stock_prices[symbol] = round(latest_price, 2)
+#     return stock_prices    
 ############################################## STOCK PREDICTOR ###########################################################v
 
 @application.route('/stock')
@@ -214,9 +246,6 @@ def emergency_fund_calc():
         monthly_income = float(request.form['monthly_income'])
         monthly_expenses = float(request.form['monthly_expenses'])
         existing_savings = float(request.form['existing_savings'])
-        income_label = request.form['monthly_income']
-        expenses_label = request.form['monthly_expenses']
-        savings_label = request.form['existing_savings']
         
         recommended_emergency_fund = max(6 * monthly_expenses, 50000)
 
@@ -235,26 +264,7 @@ def emergency_fund_calc():
                     additional_earnings_required = monthly_savings_required
                     result += f" To reach this goal, you need to earn an additional ₹{additional_earnings_required:.2f} per month (or reduce expenses)."
 
-        # Create a bar chart with user-defined labels
-        labels = [income_label, expenses_label, savings_label]
-        values = [monthly_income, monthly_expenses, existing_savings]
-        colors = ['green', 'red', 'blue']
-
-        plt.bar(labels, values, color=colors)
-        plt.title('Financial Overview')
-        plt.xlabel('Categories')
-        plt.ylabel('Amount (in currency)')
-
-        # Save the plot to a BytesIO object
-        image_stream = BytesIO()
-        plt.savefig(image_stream, format='png')
-        image_stream.seek(0)
-        plt.close()
-
-        # Convert the BytesIO object to base64 for embedding in HTML
-        image_base64 = base64.b64encode(image_stream.getvalue()).decode('utf-8')
-        
-        return render_template('services/emergency_fund.html', result=result, chart=image_base64)
+        return render_template('services/emergency_fund.html', result=result)
     return render_template('services/emergency_fund.html')
 
 
@@ -328,24 +338,59 @@ def debt_score():
 def renderchat():
     return render_template('chatbots/chatbot.html')
 
-@application.route('/chat', methods=['GET','POST'])
+# @application.route('/chat', methods=['GET','POST'])
+# def chat():
+#     user_message = request.form.get('user_message')
+#     if user_message:
+#         response = generate_response(user_message)
+#         return jsonify({"bot_response": response})
+#     else:
+#         return jsonify({"error": "Invalid request"})
+
+# def generate_response(user_message):
+#     # You can add your chatbot logic here based on user messages
+#     if "predict stock price" in user_message:
+#         print("Sure! Please provide the stock symbol, start date, and end date for the prediction.")
+#         return render_template('chatbots/stockdetails2.html')
+#     else:
+#         return "I'm not sure how to respond to that."    
+
+import textwrap
+import google.generativeai as genai
+
+def to_markdown(text):
+  text = text.replace('•', '  *')  # Use two spaces for better formatting
+  return textwrap.indent(text, '> ', predicate=lambda _: True)
+
+# Configure Generative AI model (assuming API key is set in environment variable)
+genai.configure(api_key=os.environ.get('GOOGLE_API_KEY'))
+model = genai.GenerativeModel('gemini-pro')
+
+from flask import session
+from flask import redirect, url_for
+
+@application.route('/chat/clear', methods=['GET'])
+def clear_chat():
+    if 'messages' in session:
+        session.pop('messages')
+    return redirect(url_for('chat'))
+
+@application.route('/chat', methods=['GET', 'POST'])
 def chat():
-    user_message = request.form.get('user_message')
-    if user_message:
-        response = generate_response(user_message)
-        return jsonify({"bot_response": response})
-    else:
-        return jsonify({"error": "Invalid request"})
+    if 'messages' not in session:
+        session['messages'] = []
 
-def generate_response(user_message):
-    # You can add your chatbot logic here based on user messages
-    if "predict stock price" in user_message:
-        print("Sure! Please provide the stock symbol, start date, and end date for the prediction.")
-        return render_template('chatbots/stockdetails2.html')
-    else:
-        return "I'm not sure how to respond to that."
-    
+    messages = session['messages']
 
+    if request.method == 'POST':
+        user_message = request.form['message']
+        messages.append({'role': 'user', 'parts': [user_message]})
+        response = model.generate_content(messages)
+        model_response = to_markdown(response.text)
+        messages.append({'role': 'model', 'parts': [model_response]})
+        session['messages'] = messages
+
+    return render_template('chatbots/chatbot.html', messages=messages)
 
 ########################################################financial calculators####################################################################
 

@@ -187,7 +187,7 @@
                                 <h5>Stock: {{ prediction.stock_symbol }}</h5>
                                 <p>Start Date: {{ prediction.start_date }}</p>
                                 <p>End Date: {{ prediction.end_date }}</p>
-                                <p>Predicted Closing Price for Next Day: {{ prediction.next_day_price }}</p>
+                                <p>Predicted Closing Price for Next Day(LSTM): {{ prediction.next_day_price }}</p>
                                 <!-- <img src="data:image/png;base64,{{ prediction.plot_data }}" class="img-fluid"> -->
                                 <form method="POST" action="{{ url_for('delete_prediction', prediction_id=prediction.id) }}">
                                   <button type="submit" class="btn btn-danger">Delete</button>

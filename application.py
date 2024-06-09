@@ -74,7 +74,6 @@ def predict():
 
     actual_prices = result['actual_prices']
     predicted_prices = result['predicted_prices']
-    print(actual_prices)
 
     plt.figure(figsize=(10, 6))
     plt.plot(date_range, actual_prices, label='Actual Price', color='red')
@@ -356,7 +355,7 @@ def chat():
         messages.append({'role': 'model', 'parts': [model_response]})
         session['messages'] = messages
 
-    return render_template('chatbots/chatbot.html', messages=messages)
+    return render_template('services/chatbot.html', messages=messages)
 
 ########################################################financial calculators####################################################################
 

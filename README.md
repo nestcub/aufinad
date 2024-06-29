@@ -225,8 +225,4 @@ def predict_stock_price(stock_symbol, start_date, end_date, sequence_length):
 
 ### Contribution
 Feel free to fork this project, make improvements, and submit pull requests.
-
-### License
-This project is licensed under the MIT License.
-
 ---

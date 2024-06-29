@@ -52,7 +52,7 @@ GOOGLE_API_KEY=your_google_api_key
 Before you commit your project to a Git repository, create a `.gitignore` file in the project root directory. This file tells Git which files and directories to ignore. 
 
 Copy the contents of the `.gitignore` file from [Python.gitignore](https://github.com/github/gitignore/blob/main/Python.gitignore) or add the following custom entries:
-Remember, when adding custom entries to gitignore file, add the correct names of your virtual environment, environment variables file, etc.
+- Remember, when adding custom entries to gitignore file, add the correct names of your virtual environment, environment variables file, etc.
 
 ```
 # Environment variables

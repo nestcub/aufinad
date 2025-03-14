@@ -1,4 +1,4 @@
-## AUFINAD (Automated Financial Advisory)
+## AUFINAD (Automated Financial Advisory) - College project name
 
 ### Project Overview
 AUFINAD is a web application built using Flask that utilizes a deep learning model (LSTM) to predict stock prices. It includes features like live stock price widgets, financial calculators, and a chatbot for financial questions.
